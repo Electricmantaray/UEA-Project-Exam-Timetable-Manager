@@ -29,7 +29,7 @@ import psycopg2
 #Setup connnection using credentials
 def connect_to_database():
 
-    #Attempts to connec to database with suitable output message
+    #Attempts to connect to database with suitable output message
     try:
         conn = psycopg2.connect(
             host="cmpstudb-01.cmp.uea.ac.uk",
@@ -40,7 +40,7 @@ def connect_to_database():
         print("------ \n Connected to Database. \n------")
         return conn
     
-    except psycopg2.ERROR as e:
+    except psycopg2.Error as e:
         print("------ \n Error to Database:", e,"  \n------")
         exit(1)
 
@@ -52,14 +52,14 @@ def execute_SQL_file(conn, SQL_path):
     #Attempts to execute SQL file with suitable output message
     try:
         #Opens, reads and executes the SQL file
-        SQLFile = open(SQL_path, "r")
-        SQL = SQLFile.read()
+        with open (SQL_path, "r") as SQLFile:
+            SQL = SQLFile.read()
         
         cur = conn.cursor()
         cur.execute(SQL)
         conn.commit()
         cur.close()
-        print(f"------ \n Sucessfully executed file: {SQL_path} \n------")
+        print(f"------ \n Successfully executed file: {SQL_path} \n------")
 
     except Exception as e:
         print(f"------ \n Failed to execute file: {SQL_path},", e, "\n------")
@@ -75,5 +75,5 @@ def main():
     conn.close()
     print("------ \n Disconnected from Database. \n------")
 
-main()
-
+if __name__ == "__main__":
+    main()
