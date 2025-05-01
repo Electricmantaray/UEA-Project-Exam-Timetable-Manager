@@ -1,10 +1,12 @@
 -- COURSEWORK --
 
--- SCHEMA CREATION --
+--------------- SCHEMA CREATION ---------------
 CREATE SCHEMA IF NOT EXISTS Coursework;
 SET search_path TO Coursework;
+-----------------------------------------------
 
--- TABLE CREATION --
+
+--------------- TABLE CREATION ---------------
 -- Create exam table
 CREATE TABLE IF NOT EXISTS exam (
     excode CHAR(4) PRIMARY KEY,
@@ -43,3 +45,12 @@ CREATE TABLE IF NOT EXISTS cancel (
     CONSTRAINT fk_cancel_exam FOREIGN KEY (excode) REFERENCES exam(excode) ON DELETE CASCADE,
     CONSTRAINT fk_cancel_student FOREIGN KEY (sno) REFERENCES student(sno) ON DELETE SET NULL
 );
+
+----------------------------------------------
+
+-- Triggers --
+
+-- Preventing multiple exams on the same day
+/*
+CREATE OR REPLACE FUNCTION 
+*/
