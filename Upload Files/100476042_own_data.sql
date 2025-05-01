@@ -69,14 +69,14 @@ INSERT into exam(excode, extitle, exlocation, exdate, extime) VALUES
 -- 
     ('A001', 'Database system exam 2', 'Abnormal location', '2025-11-01', '9:00'),
 
--- Empty Violation (excode, extitle, exlocation, exdate, extime)
+-- NULL Violation (excode, extitle, exlocation, exdate, extime)
 -- Output:
 -- 
-    (, 'Abnormal exam 2', 'Abnormal location', '2025-11-01', '09:00'),
-    ('A002', '',  'Abnormal location', '2025-11-01', '09:00'),
-    ('A003', 'Abnormal exam 3', '', '2025-11-01', '09:00'),
-    ('A004', 'Abnormal exam 4', 'Abnormal location', '', '09:00'),
-    ('A005', 'Abnormal exam 5', 'Abnormal location', '2025-11-01', ''),
+    (NULL, 'Abnormal exam 2', 'Abnormal location', '2025-11-01', '09:00'),
+    ('A002', NULL,  'Abnormal location', '2025-11-01', '09:00'),
+    ('A003', 'Abnormal exam 3', NULL, '2025-11-01', '09:00'),
+    ('A004', 'Abnormal exam 4', 'Abnormal location', NULL, '09:00'),
+    ('A005', 'Abnormal exam 5', 'Abnormal location', '2025-11-01', NULL),
 
 -- Abnormally Long code/title and location (Greater than their limits)
 -- Output:
@@ -113,9 +113,9 @@ INSERT into student(sno, sname, semail) VALUES
 -- Empty Violation (sno, sname, semail)
 -- Output:
 -- 
-    (, 'Void1', 'void1@example.edu'),
-    (9999, '', 'Void2@example.edu'),
-    (9998, 'Void3', ''),
+    (NULL, 'Void1', 'void1@example.edu'),
+    (9999, NULL, 'Void2@example.edu'),
+    (9998, 'Void3', NULL),
 
 -- Invalid Entry Type (INTEGER -> CHAR, CHAR -> INTEGER)
 -- Output:
@@ -137,11 +137,35 @@ INSERT into student(sno, sname, semail) VALUES
 
 -- ENTRY
 INSERT into entry(eno, excode, sno, egrade) VALUES
-    (),
-    (),
-    (),
-    (),
-    ();
+-- Primary Key Violation (Duplicate eno)
+-- Output: 
+-- 
+    (1, 'DB02', 1, NULL),
+
+-- Duplicated Entrys Violations (Multiple entrys for the same student and exam)
+-- Output: 
+-- 
+    (9999, 'DB01', 1, NULL),
+    (9998, 'DB01', 1, NULL),
+
+-- Empty Violation/Foreign Key Violation (eno, Foreign Key Violation: excode, sno)
+-- Output:
+-- 
+    (NULL, 'DB01', 2, NULL),
+    (9997, NULL, 3, NULL),
+    (9996, 'DB03', NULL, NULL),
+
+-- Same Day Exam Violation (Same student has multiple exams on the same day)
+-- Output:
+--
+    (9995, 'DB02', 6, NULL),
+    (9996, 'WP01', 6, NULL),
+
+-- Constraint Violation (egrade outside of 0-100 bounds, egrade with 3 or more decimal places)
+-- Output
+-- 
+    (9995, 'MA01', 4, 101.00),
+    (9994, 'SP01', 7, 50.5555);
 
 -- CANCEL
 INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
