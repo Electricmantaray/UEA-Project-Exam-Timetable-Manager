@@ -13,7 +13,7 @@ INSERT into Coursework.exam(excode, extitle, exlocation, exdate, extime) VALUES
     ('WP01', 'Web-based programming, General exam', 'UEA Thomas Paine room 2', '2025-11-14', '14:55'),
     ('WP02', 'Web-based programming, Higher exam', 'Kings College London, main hall', '2025-11-17', '15:30'),
     ('AI01', 'Ai, end of year exam', 'University of Birmingham, hall 2', '2025-11-02', '10:15'),
-    ('AI02', 'Ai, Large language models and beyond', 'University of Birmingham, room 305', '2025-11-07', '12;00'),
+    ('AI02', 'Ai, Large language models and beyond', 'University of Birmingham, room 305', '2025-11-07', '12:00'),
     ('MA01', 'Maths Group A, Calculus 1', 'University of sheffield, The Diamond, room 13', '2025-11-09', '9:05');
 
 -- STUDENT
@@ -41,7 +41,7 @@ INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
     (8, 'AI01', 4, 47.84),
     (9, 'MA01', 10, 24.02),
     (10, 'SD02', 7, NULL);
-/*
+
 -- CANCEL
 INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
     (),
@@ -65,11 +65,38 @@ INSERT into Coursework.exam(excode, extitle, exlocation, exdate, extime) VALUES
 
 -- STUDENT
 INSERT into Coursework.student(sno, sname, semail) VALUES
-    (),
-    (),
-    (),
-    (),
-    ();
+-- Primary Key Violation (Duplicate sno)
+-- Output: 
+-- 
+    (1, 'Abnormal Student', 'Abnormal1@example.edu'),
+
+-- Duplicated Email Violation
+-- Output: 
+-- 
+    (2, 'Abnormal Student', 'lnguyen17@example.edu'),
+
+-- Empty Violation (sno, sname, semail)
+-- Output:
+-- 
+    (, 'Void1', 'void1@example.edu'),
+    (9999, '', 'Void2@example.edu'),
+    (9998, 'Void3', ''),
+
+-- Invalid Entry Type (INTEGER -> CHAR, CHAR -> INTEGER)
+-- Output:
+-- 
+    ('1', 'Abnormal Student', 'abnormal2@example.edu'),
+    (9997, 1234, 1234),
+
+-- Abnormally Long names/emails (Greater than 200 characters)
+    (9996, 'Lorem ipsum dolor sit amet consectetur adipiscing 
+    elit quisque faucibus ex sapien vitae pellentesque sem 
+    placerat in id cursus mi pretium tellus duis convallis 
+    tempus leo eu aenean sed diam urna tempor', 
+    'Lorem ipsum dolor sit amet consectetur adipiscing 
+    elit quisque faucibus ex sapien vitae pellentesque sem 
+    placerat in id cursus mi pretium tellus duis convallis 
+    tempus leo eu aenean sed diam urna tempor');
 
 -- ENTRY
 INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
@@ -87,4 +114,3 @@ INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
     (),
     ();
 ---------------------------------------------
-*/

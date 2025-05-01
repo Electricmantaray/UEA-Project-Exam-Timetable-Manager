@@ -1,0 +1,11 @@
+CMPS Coursework Project - Database Systems
+
+Student ID: 100476042
+Course/Module: 2024/5: DATABASE SYSTEMS - SEM2 - B
+Description: 
+    Clarify details regarding the files in this project, 
+    to help the moderators understand my work.
+
+---
+
+
