@@ -1,10 +1,13 @@
 -- COURSEWORK --
+
+SET search_path TO Coursework;
+
 -- DATA INSERTIONS --
 
 --------------- NORMAL DATA ---------------
 
 -- EXAM
-INSERT into Coursework.exam(excode, extitle, exlocation, exdate, extime) VALUES
+INSERT into exam(excode, extitle, exlocation, exdate, extime) VALUES
     ('DB01', 'Database system exam 1', 'UEA Lecture hall 01', '2025-11-08', '09:30'),
     ('DB02', 'Database system exam 2', 'UEA Lecture hall 03', '2025-11-14', '13:15'),
     ('DB03', 'Database system exam 3', 'UEA Congregation hall', '2025-11-21', '11:00'),
@@ -17,7 +20,7 @@ INSERT into Coursework.exam(excode, extitle, exlocation, exdate, extime) VALUES
     ('MA01', 'Maths Group A, Calculus 1', 'University of sheffield, The Diamond, room 13', '2025-11-09', '9:05');
 
 -- STUDENT
-INSERT into Coursework.student(sno, sname, semail) VALUES
+INSERT into student(sno, sname, semail) VALUES
     (1, 'Emily Parker', 'eparker23@example.edu'),
     (2, 'Liam Nguyen', 'lnguyen17@example.edu'),
     (3, 'Sophia Patel', 'spatel45@example.edu'),
@@ -30,7 +33,7 @@ INSERT into Coursework.student(sno, sname, semail) VALUES
     (10, 'Oscar Bennett', 'obennett01@example.edu');
 
 -- ENTRY
-INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
+INSERT into entry(eno, excode, sno, egrade) VALUES
     (1, 'DB01', 3, 49.19),
     (2, 'WP02', 5, 74.26),
     (3, 'SD01', 7, 80.23),
@@ -43,7 +46,7 @@ INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
     (10, 'SD02', 7, NULL);
 
 -- CANCEL
-INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
+INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
     (),
     (),
     (),
@@ -52,25 +55,57 @@ INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
 ---------------------------------------------
 
 
-
 --------------- Abnormal Data ---------------
 
 -- EXAM
-INSERT into Coursework.exam(excode, extitle, exlocation, exdate, extime) VALUES
-    (),
-    (),
-    (),
-    (),
-    ();
+INSERT into exam(excode, extitle, exlocation, exdate, extime) VALUES
+-- Primary Key Violation (Duplicate excode)
+-- Output:
+-- 
+    ('DB01', 'Abnormal exam 1', 'Abnormal location', '2025-11-01', '09:00'),
+
+-- Duplicated Title Violation (extitle Not Unique)
+-- Output:
+-- 
+    ('A001', 'Database system exam 2', 'Abnormal location', '2025-11-01', '9:00'),
+
+-- Empty Violation (excode, extitle, exlocation, exdate, extime)
+-- Output:
+-- 
+    (, 'Abnormal exam 2', 'Abnormal location', '2025-11-01', '09:00'),
+    ('A002', '',  'Abnormal location', '2025-11-01', '09:00'),
+    ('A003', 'Abnormal exam 3', '', '2025-11-01', '09:00'),
+    ('A004', 'Abnormal exam 4', 'Abnormal location', '', '09:00'),
+    ('A005', 'Abnormal exam 5', 'Abnormal location', '2025-11-01', ''),
+
+-- Abnormally Long code/title and location (Greater than their limits)
+-- Output:
+-- 
+    ('A9999', 'Abnormal exam 9999', 'Abnormal location',  '2025-11-01', '09:00'),
+    ('A0006', 'Lorem ipsum dolor sit amet consectetur adipiscing 
+    elit quisque faucibus ex sapien vitae pellentesque sem 
+    placerat in id cursus mi pretium tellus duis convallis 
+    tempus leo eu aenean sed diam urna tempor',
+    'Lorem ipsum dolor sit amet consectetur adipiscing 
+    elit quisque faucibus ex sapien vitae pellentesque sem 
+    placerat in id cursus mi pretium tellus duis convallis 
+    tempus leo eu aenean sed diam urna tempor',
+    '2025-11-01', '09:00'),
+
+-- Constraint Violations (exdate outside of November 2025, extime outside the 09:00-18:00)
+-- Output:
+-- 
+    ('A007', 'Abnormal exam 7', 'Abnormal location', '2024-12-25', '09:00'),
+    ('A008', 'Abnormal exam 8', 'Abnormal location', '2025-11-01', '21:00');
 
 -- STUDENT
-INSERT into Coursework.student(sno, sname, semail) VALUES
+INSERT into student(sno, sname, semail) VALUES
 -- Primary Key Violation (Duplicate sno)
 -- Output: 
 -- 
     (1, 'Abnormal Student', 'Abnormal1@example.edu'),
 
--- Duplicated Email Violation
+-- Duplicated Email Violation (semail Not Unique)
 -- Output: 
 -- 
     (2, 'Abnormal Student', 'lnguyen17@example.edu'),
@@ -88,7 +123,9 @@ INSERT into Coursework.student(sno, sname, semail) VALUES
     ('1', 'Abnormal Student', 'abnormal2@example.edu'),
     (9997, 1234, 1234),
 
--- Abnormally Long names/emails (Greater than 200 characters)
+-- Abnormally Long names and emails (Greater than 200 characters)
+-- Output:
+-- 
     (9996, 'Lorem ipsum dolor sit amet consectetur adipiscing 
     elit quisque faucibus ex sapien vitae pellentesque sem 
     placerat in id cursus mi pretium tellus duis convallis 
@@ -99,7 +136,7 @@ INSERT into Coursework.student(sno, sname, semail) VALUES
     tempus leo eu aenean sed diam urna tempor');
 
 -- ENTRY
-INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
+INSERT into entry(eno, excode, sno, egrade) VALUES
     (),
     (),
     (),
@@ -107,7 +144,7 @@ INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
     ();
 
 -- CANCEL
-INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
+INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
     (),
     (),
     (),
