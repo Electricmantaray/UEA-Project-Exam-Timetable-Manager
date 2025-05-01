@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS student (
 
 -- Create entry table
 CREATE TABLE IF NOT EXISTS entry (
-    eno SERIAL PRIMARY KEY,
+    eno INTEGER PRIMARY KEY,
     excode CHAR(4) NOT NULL,
     sno INTEGER NOT NULL,
     egrade DECIMAL(5,2) CHECK (egrade BETWEEN 0 AND 100),

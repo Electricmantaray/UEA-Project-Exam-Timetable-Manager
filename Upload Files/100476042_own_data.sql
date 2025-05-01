@@ -41,14 +41,9 @@ INSERT into Coursework.entry(eno, excode, sno, egrade) VALUES
     (8, 'AI01', 4, 47.84),
     (9, 'MA01', 10, 24.02),
     (10, 'SD02', 7, NULL);
-
+/*
 -- CANCEL
 INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
-    (),
-    (),
-    (),
-    (),
-    (),
     (),
     (),
     (),
@@ -92,3 +87,4 @@ INSERT into Coursework.cancel(eno, excode, sno, cdate, cuser) VALUES
     (),
     ();
 ---------------------------------------------
+*/
