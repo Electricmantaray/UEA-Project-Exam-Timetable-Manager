@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS cancel (
     cdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     cuser VARCHAR(200) NOT NULL,
     PRIMARY KEY (eno),
-    CONSTRAINT fk_cancel_entry FOREIGN KEY (eno) REFERENCES entry(eno) ON DELETE CASCADE,
     CONSTRAINT fk_cancel_exam FOREIGN KEY (excode) REFERENCES exam(excode) ON DELETE CASCADE,
     CONSTRAINT fk_cancel_student FOREIGN KEY (sno) REFERENCES student(sno) ON DELETE SET NULL
 );
