@@ -158,31 +158,50 @@ INSERT into entry(eno, excode, sno, egrade) VALUES
     (9999, 'DB01', 1, NULL),
     (9998, 'DB01', 1, NULL),
 
--- Empty Violation/Foreign Key Violation (eno, Foreign Key Violation: excode, sno)
+-- Empty Violation (eno, excode, sno)
 -- Output:
 -- 
     (NULL, 'DB01', 2, NULL),
     (9997, NULL, 3, NULL),
     (9996, 'DB03', NULL, NULL),
 
+-- Foreign Key Violation (Non-existent excode or sno)
+-- Output:
+--
+    (9995, 'NONE', 4, NULL),
+    (9994, 'AI02' 7421, NULL),
+
 -- Same Day Exam Violation (Same student has multiple exams on the same day)
 -- Output:
 --
-    (9995, 'DB02', 6, NULL),
-    (9996, 'WP01', 6, NULL),
+    (9993, 'DB02', 6, NULL),
+    (9992, 'WP01', 6, NULL),
 
 -- Constraint Violation (egrade outside of 0-100 bounds, egrade with 3 or more decimal places)
--- Output
+-- Output:
 -- 
-    (9995, 'MA01', 4, 101.00),
-    (9994, 'SP01', 7, 50.5555);
+    (9991, 'MA01', 4, 101.00),
+    (9990, 'SP01', 7, 50.5555);
 
 
 -- CANCEL --
 INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
-    (),
-    (),
-    (),
-    (),
-    ();
+-- Primary Key Violation (Duplicate)
+-- Output:
+-- 
+    (11, 'MA01', 10, '2025-01-01 00:00:00', 'admin'),
+
+-- Empty Violation (eno, excode, sno, cuser)
+-- Output:
+-- 
+    (NULL, 'SD02', 5, '2025-01-01 00:00:00', 'admin'),
+    (9999, NULL, 3, '2025-01-01 00:00:00', 'admin'),
+    (9998, 'DB03', NULL, '2025-01-01 00:00:00', 'admin'),
+    (9997, 'AI02', 3, '2025-01-01 00:00:00', NULL),
+
+-- Foreign Key Violation (Non-existent excode and Student already cancelled sno)
+-- Output:
+-- 
+    (9996, 'CODE', 9, '2025-01-01 00:00:00', 'admin'),
+    (9995, 'DB02', 6435, '2025-01-01 00:00:00', 'admin');
 ---------------------------------------------
