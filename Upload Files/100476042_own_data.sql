@@ -62,7 +62,7 @@ INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
     (20, 'DB01', 10, '2025-02-19 20:53:34', 'admin');  -- Oscar Bennett
 ---------------------------------------------
 
-
+/*
 --------------- Abnormal Data ---------------
 
 -- EXAM --
@@ -287,3 +287,5 @@ INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
     (9996, 'CODE', 9, '2025-01-01 00:00:00', 'admin'),
     (9995, 'DB02', 6435, '2025-01-01 00:00:00', 'admin');
 ---------------------------------------------
+
+*/
