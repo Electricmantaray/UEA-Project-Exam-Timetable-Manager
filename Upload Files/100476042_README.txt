@@ -8,4 +8,8 @@ Description:
 
 ---
 
+Need to dos, 
+trigger for duplicate entry violation (same student same exam)
+trigger for (same student different exams)
 
+a student can only do 1 exam in a single day, cant do an exam twice
