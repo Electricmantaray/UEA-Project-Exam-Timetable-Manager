@@ -36,31 +36,30 @@ INSERT into student(sno, sname, semail) VALUES
 
 -- ENTRY --
 INSERT into entry(eno, excode, sno, egrade) VALUES
-    (1, 'DB01', 3, 49.19),
-    (2, 'WP02', 5, 74.26),
-    (3, 'SD01', 7, NULL),
-    (4, 'DB01', 2, 61.39),
-    (5, 'DB02', 3, NULL),
-    (6, 'AI02', 4, 0.73),
-    (7, 'WP01', 5, NULL),
-    (8, 'AI01', 4, 47.84),
-    (9, 'MA01', 10, 24.02),
-    (10, 'SD02', 7, NULL);
+    (1, 'DB01', 3, 49.19),  -- Sophia Patel takes DB01
+    (2, 'WP02', 5, 74.26),  -- Ava Brooks takes WP02
+    (3, 'SD01', 7, NULL),   -- Isla Robinson registered, NOT TAKEN
+    (4, 'DB01', 2, 61.39),  -- Liam Nguyen takes DB01
+    (5, 'DB02', 3, NULL),   -- Sophia Patel registered, NOT TAKEN
+    (6, 'AI02', 4, 0.73),   -- Jacob Thompson takes AI02
+    (7, 'WP01', 5, NULL),   -- Ava Brooks registered, NOT TAKEN
+    (8, 'AI01', 4, 47.84),  -- Jacob Thompson takes AI01
+    (9, 'MA01', 10, 24.02), -- Oscar Bennett takes MA01
+    (10, 'SD02', 7, NULL);  -- Isla Robinson registered, NOT TAKEN
 
 
 -- CANCEL --
 INSERT into cancel(eno, excode, sno, cdate, cuser) VALUES
-    (11, ),
-    (12),
-    (13),
-    (13),
-    (14),
-    (15),
-    (16),
-    (17),
-    (18),
-    (19),
-    (20);
+    (11, 'WP01', 1, '2025-09-27 19:08:34', 'admin'),   -- Emily Parker registered
+    (12, 'DB03', 2, '2025-01-04 04:58:36', 'admin'),   -- Liam Nguyen registered
+    (13, 'MA01', 3, '2025-03-23 17:30:30', 'admin'),   -- Sophia Patel registered
+    (14, 'AI01', 4, '2025-03-11 14:51:10', 'admin'),   -- Jacob Thompson
+    (15, 'SD01', 5, '2025-01-20 05:09:07', 'admin'),   -- Ava Brooks
+    (16, 'AI02', 6, '2025-08-10 22:21:59', 'admin'),   -- Ethan Davis
+    (17, 'DB02', 7, '2025-08-08 04:16:45', 'admin'),   -- Isla Robinson
+    (18, 'WP02', 8, '2025-05-19 17:23:25', 'admin'),   -- Noah Campbell
+    (19, 'SD02', 9, '2025-04-14 01:34:17', 'admin'),   -- Mia Ahmed
+    (20, 'DB01', 10, '2025-02-19 20:53:34', 'admin');  -- Oscar Bennett
 ---------------------------------------------
 
 
