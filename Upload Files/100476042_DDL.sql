@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS cancel (
 -- Triggers Functions --
 
 -- Preventing entry into multiple exams on the same day
-CREATE OR REPLACE FUNCTION exam_day_limit()
-RETURNS trigger AS $exam_day_limit$
+CREATE OR REPLACE FUNCTION check_exam_day_limit()
+RETURNS trigger AS $enforce_exam_day_limit$
     DECLARE
     exam_date DATE;
 
@@ -87,14 +87,63 @@ RETURNS trigger AS $exam_day_limit$
             NEW.sno, NEW.excode, exam_date;
         END IF;
 
+        -- Else insert normally
         RETURN NEW;
 
     END;
-$exam_day_limit$ LANGUAGE PLPGSQL;
+$enforce_exam_day_limit$ LANGUAGE PLPGSQL;
 
 -- Triggers function before inserting to entry table
-CREATE OR REPLACE TRIGGER exam_day_limit BEFORE INSERT ON entry
-    FOR EACH ROW EXECUTE FUNCTION exam_day_limit();
+CREATE OR REPLACE TRIGGER enforce_exam_day_limit BEFORE INSERT ON entry
+    FOR EACH ROW EXECUTE FUNCTION check_exam_day_limit();
+
+
+-- Prevents a student from entering the same exam more than once in a year
+CREATE OR REPLACE FUNCTION check_exam_attempt_limit()
+RETURNS trigger AS $enforce_exam_attempt_limit$
+    DECLARE
+    exam_year INT;
+
+    BEGIN
+        /*
+        Extracts the year from exdate 
+        Assigns it to exam_year identified using the excode
+        Allows exception to specify registered date
+        */
+        SELECT date_part('year', exdate) INTO exam_year FROM exam WHERE excode = NEW.excode;
+
+        /*
+        JOINS entry and exam using the exam code,
+        Searches entry to see if student number is present,
+        if the same exam is entered twice in the same year it raises exceptions
+        */
+        IF EXISTS(
+            SELECT 1 FROM entry
+            INNER JOIN exam ON entry.excode = exam.excode
+            WHERE entry.sno = NEW.sno 
+                AND entry.excode = NEW.excode
+                AND date_part('year', exam.exdate) = exam_year
+        )
+        /*
+        If it does exist, conflict is then raised and specified
+        */
+        Then 
+            RAISE EXCEPTION 
+            'Student: % already has exam (%) this year',
+            NEW.sno, NEW.excode;
+        END IF;
+
+        -- Else insert normally
+        RETURN NEW;
+
+    END;
+$enforce_exam_attempt_limit$ LANGUAGE PLPGSQL;
+
+
+-- Triggers function before inserting to entry table
+CREATE OR REPLACE TRIGGER enforce_exam_attempt_limit BEFORE INSERT ON entry
+    FOR EACH ROW EXECUTE FUNCTION check_exam_attempt_limit();
+
 
 
 

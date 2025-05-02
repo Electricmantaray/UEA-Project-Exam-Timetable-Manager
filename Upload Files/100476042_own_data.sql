@@ -197,10 +197,10 @@ INSERT into entry(eno, excode, sno, egrade) VALUES
     */
     (1, 'DB02', 1, NULL),
 
--- Duplicated Entrys Violations (Multiple entrys for the same student and exam)
+-- Duplicated Entrys Violations (A student can only enter a specific exam once per year)
 -- Output: 
     /*
-    PLACEHOLDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ERROR:  Student: 1 already has exam (DB01) this year
     */
     (9999, 'DB01', 1, NULL),
     (9998, 'DB01', 1, NULL),
@@ -233,7 +233,7 @@ INSERT into entry(eno, excode, sno, egrade) VALUES
 -- Same Day Exam Violation (Same student has multiple exams on the same day)
 -- Output: 
     /*
-    PLACEHOLDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ERROR:  Student: 6 is already registered for an exam (DB02) on that date: 2025-11-14
     */
     (9993, 'DB02', 6, NULL),
     (9992, 'WP01', 6, NULL),
