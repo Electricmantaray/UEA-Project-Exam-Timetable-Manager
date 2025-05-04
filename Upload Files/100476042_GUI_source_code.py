@@ -20,16 +20,17 @@ You can add an additional readme file (e.g., .txt) for proper setup and usage. (
 
 #Imports
 import psycopg2
+import tkinter as tk
 
 
 #--------------- DATABASE CONNECTION ---------------#
 
 
 # --- CREDENTIALS ---
-#Setup connnection using credentials
+# Setup connnection using credentials
 def connect_to_database():
 
-    #Attempts to connect to database with suitable output message
+    # Attempts to connect to database with suitable output message
     print("Connecting to Database ...")
     try:
         conn = psycopg2.connect(
@@ -47,12 +48,12 @@ def connect_to_database():
 
 # ------------------
 
-#Executes SQL File 
+# Executes SQL File 
 def execute_SQL_file(conn, SQL_path):
 
-    #Attempts to execute SQL file with suitable output message
+    # Attempts to execute SQL file with suitable output message
     try:
-        #Opens, reads and executes the SQL file
+        # Opens, reads and executes the SQL file
         with open (SQL_path, "r") as SQLFile:
             SQL = SQLFile.read()
         
@@ -68,8 +69,8 @@ def execute_SQL_file(conn, SQL_path):
 #---------------------------------------------------#
 
 def main():
-    #Connects and executes following SQL files
-    #Note: Data insert should always be executed after DDL
+    # Connects and executes following SQL files
+    # Note: Data insert should always be executed after DDL
     conn = connect_to_database()
     execute_SQL_file(conn, "Upload Files/100476042_DDL.sql")
     execute_SQL_file(conn, "Upload Files/100476042_own_data.sql")
@@ -80,4 +81,4 @@ if __name__ == "__main__":
     main()
 
 
-##--------------- GUI #---------------#
+#--------------- GUI ---------------#
