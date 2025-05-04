@@ -28,9 +28,11 @@ need to automatically cancel upon delete
 
 3rd, Finish any transactions of interest,
 do foundations of GUI
+do indexes
 
 4th, carry on with GUI preferably finishing it 
-
+check if cascade is okay, if exam is deleted should it delete an entry or set null
+also ask if cancel table refereces should set null or delete
 ---
 
 5th start Prog 1
