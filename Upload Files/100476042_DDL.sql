@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS cancel (
 CREATE INDEX index_exam_code ON exam(excode);
 
 -- sno
-CREATE INDEX index_student_number ON student(sno));
+CREATE INDEX index_student_number ON student(sno);
 
 -- eno
 CREATE INDEX index_entry_number ON entry(eno);
