@@ -15,7 +15,7 @@
 
 #Imports
 from _100476042_db import connect_to_database, execute_SQL_file
-#from gui import CMP_Application
+from _100476042_GUI_source_code import execute_CMP_Application
 import tkinter as tk
 
 #--------------- MAIN ---------------#
@@ -28,10 +28,8 @@ def main():
     conn.close()
     print("------ Disconnected from Database. ------")
 
-    # Lanch the GUI
-    #root = tk.TK()
-    #app = CMP_Application(root)
-    #root.mainloop()
+    #Lanch the GUI
+    execute_CMP_Application()
 
 
 if __name__ == "__main__":

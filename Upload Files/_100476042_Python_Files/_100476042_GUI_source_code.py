@@ -22,9 +22,17 @@ import tkinter as tk
 
 #--------------- GUI ---------------#
 
+## Initialise
+def execute_CMP_Application():
+    
+
+    # Define root window
+    window = tk.Tk()
+    window.title("CMPS Examinations")
+    window.geometry('340x440')
+    window.configure(bg='#224855')
 
 
-
-
+    window.mainloop()
 
 #-----------------------------------#
