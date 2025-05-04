@@ -1,6 +1,6 @@
 -- COURSEWORK --
 
-SET search_path TO Coursework;
+SET search_path TO Coursework, public;
 
 -- DATA INSERTIONS --
 

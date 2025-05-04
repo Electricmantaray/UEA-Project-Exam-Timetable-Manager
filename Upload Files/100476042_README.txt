@@ -18,11 +18,13 @@ trigger for (same student different exams)
 a student can only do 1 exam in a single day, cant do an exam twice
 
 
+
 Plan
 
 2nd, do triggers and functions, 
 finish testing with outputs and put those in the comments
 Do as many of the transactions of interest as possible
+need to automatically cancel upon delete
 
 3rd, Finish any transactions of interest,
 do foundations of GUI

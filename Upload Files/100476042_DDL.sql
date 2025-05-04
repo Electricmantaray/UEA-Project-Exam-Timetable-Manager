@@ -2,7 +2,7 @@
 
 --------------- SCHEMA CREATION ---------------
 CREATE SCHEMA IF NOT EXISTS Coursework;
-SET search_path TO Coursework;
+SET search_path TO Coursework, public;
 -----------------------------------------------
 
 
@@ -35,14 +35,11 @@ CREATE TABLE IF NOT EXISTS entry (
 
 -- Create cancel table
 CREATE TABLE IF NOT EXISTS cancel (
-    eno INTEGER NOT NULL,
+    eno INTEGER PRIMARY KEY,
     excode CHAR(4) NOT NULL,
     sno INTEGER NOT NULL,
     cdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    cuser VARCHAR(200) NOT NULL,
-    PRIMARY KEY (eno),
-    CONSTRAINT fk_cancel_exam FOREIGN KEY (excode) REFERENCES exam(excode) ON DELETE CASCADE,
-    CONSTRAINT fk_cancel_student FOREIGN KEY (sno) REFERENCES student(sno) ON DELETE SET NULL
+    cuser VARCHAR(200) NOT NULL
 );
 
 ----------------------------------------------
@@ -59,7 +56,7 @@ CREATE TABLE IF NOT EXISTS cancel (
 CREATE OR REPLACE FUNCTION check_exam_day_limit()
 RETURNS trigger AS $enforce_exam_day_limit$
     DECLARE
-    exam_date DATE;
+        exam_date DATE;
 
     BEGIN
         /*
@@ -102,7 +99,7 @@ CREATE OR REPLACE TRIGGER enforce_exam_day_limit BEFORE INSERT ON entry
 CREATE OR REPLACE FUNCTION check_exam_attempt_limit()
 RETURNS trigger AS $enforce_exam_attempt_limit$
     DECLARE
-    exam_year INT;
+        exam_year INT;
 
     BEGIN
         /*
@@ -145,13 +142,57 @@ CREATE OR REPLACE TRIGGER enforce_exam_attempt_limit BEFORE INSERT ON entry
     FOR EACH ROW EXECUTE FUNCTION check_exam_attempt_limit();
 
 
+-- Automatically fills cancel table upon entry deletion
+CREATE OR REPLACE FUNCTION autofill_cancel_table()
+RETURNS trigger AS $autofill_cancel_table$
+    BEGIN
+
+        /*
+        Inserts deleted data into cancel table to retain integrity
+        */
+        INSERT INTO cancel(eno, excode, sno, cdate, cuser) VALUES
+            (OLD.eno, OLD.excode, OLD.sno, NOW(), 'System user');
+
+        RETURN NULL;
+
+    END;
+$autofill_cancel_table$ LANGUAGE PLPGSQL;
+
+-- Triggers function upon entry deletion
+CREATE OR REPLACE TRIGGER autofill_cancel_table AFTER DELETE ON entry
+    FOR EACH ROW EXECUTE FUNCTION autofill_cancel_table();
+
+-----------------------------------------------
 
 
+-------------------- VIEWS --------------------
 
--- Function --
+-- Student Timeable
 
+-- Joins the 3 tables and provides a view table with 
+-- exam details and students name 
+CREATE OR REPLACE VIEW student_timetable AS
+SELECT student.sno, student.sname, exam.excode, exam.extitle, exam.exlocation, exam.exdate, exam.extime 
+FROM exam
+INNER JOIN entry ON exam.excode = entry.excode
+INNER JOIN student ON entry.sno = student.sno
+ORDER BY exdate, extime;
 
+-- Exam Results (Distinction/Pass/Fail)
 
+-- Joins the 3 tables and provides an case statement
+-- which calculates egrade into a result
+CREATE OR REPLACE VIEW exam_results AS
+SELECT exam.excode, student.sname, exam.extitle,
+CASE
+	WHEN egrade >= 70.00 THEN 'Distinction'
+	WHEN egrade >= 50.00 THEN 'Pass'
+	WHEN egrade < 50.00 THEN 'Fail'
+	WHEN egrade is NULL THEN 'Not taken'
+END AS result
+FROM exam
+INNER JOIN entry ON exam.excode = entry.excode
+INNER JOIN student ON entry.sno = student.sno
+ORDER BY excode, sname
 
-
-----------------------------------------------
+-----------------------------------------------
