@@ -14,7 +14,7 @@
 """
 
 #Imports
-from _100476042_Python_Files import connect_to_database, execute_SQL_file
+from _100476042_db import connect_to_database, execute_SQL_file
 #from gui import CMP_Application
 import tkinter as tk
 

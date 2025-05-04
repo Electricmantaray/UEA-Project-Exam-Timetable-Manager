@@ -71,7 +71,6 @@ RETURNS trigger AS $enforce_exam_day_limit$
 
         -- Searches entry to see if student number is present,
         -- and if the date of the new exam is the same as the regestered entry
-        */
         IF EXISTS (
             SELECT 1 FROM entry
             INNER JOIN exam ON entry.excode = exam.excode
@@ -106,7 +105,6 @@ RETURNS trigger AS $enforce_exam_attempt_limit$
 
         -- Searches entry to see if student number is present,
         -- if the same exam is entered twice in the same year it raises exceptions
-        */
         IF EXISTS(
             SELECT 1 FROM entry
             INNER JOIN exam ON entry.excode = exam.excode
