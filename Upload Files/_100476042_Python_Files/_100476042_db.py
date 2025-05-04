@@ -1,31 +1,24 @@
 """
-    File: 100476042_GUI_SOURCE_CODE.py
+    File: 100476042_db.py
 
     Author: Hayden Jones
 
     Date started: 26/4/2025
 
     Description:
-        Python file for the purpose of providing a graphical user interface for
-        the user of the database. 
         Use of Psycopg2, to connect files to database
-        Uses Tkinter.
-        GUI to be used for transactions
+        Executes all SQL files
 
 
     History: 26/4/2025 v 1.00
 
-You can add an additional readme file (e.g., .txt) for proper setup and usage. (optional)
 """
 
 #Imports
 import psycopg2
-import tkinter as tk
 
 
 #--------------- DATABASE CONNECTION ---------------#
-
-
 # --- CREDENTIALS ---
 # Setup connnection using credentials
 def connect_to_database():
@@ -67,18 +60,3 @@ def execute_SQL_file(conn, SQL_path):
         print(f"- Failed to execute file: {SQL_path},", e)
 
 #---------------------------------------------------#
-
-def main():
-    # Connects and executes following SQL files
-    # Note: Data insert should always be executed after DDL
-    conn = connect_to_database()
-    execute_SQL_file(conn, "Upload Files/100476042_DDL.sql")
-    execute_SQL_file(conn, "Upload Files/100476042_own_data.sql")
-    conn.close()
-    print("------ Disconnected from Database. ------")
-
-if __name__ == "__main__":
-    main()
-
-
-#--------------- GUI ---------------#
