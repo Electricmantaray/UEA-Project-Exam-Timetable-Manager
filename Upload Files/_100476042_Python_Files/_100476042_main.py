@@ -29,7 +29,8 @@ def main():
     print("------ Disconnected from Database. ------")
 
     #Lanch the GUI
-    CMP_Application()
+    app = CMP_Application()
+    app.mainloop()
 
 
 if __name__ == "__main__":
