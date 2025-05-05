@@ -24,7 +24,7 @@ import tkinter as tk
 
 ## Initialise
 def CMP_Application():
-    #--- Variables ---#
+    #--- Colours and Fonts ---#
     background_colour_1 = '#224855'
     background_colour_2 = '#FFFFFF'
     button_colour = '#90AEAD'
@@ -48,11 +48,14 @@ def CMP_Application():
         window, 
         bg=background_colour_1
         )
-    container.pack(fill='both', expand=True)
+    container.grid(row=0, column=0)
+    window.grid_rowconfigure(0, weight=1)
+    window.grid_columnconfigure(0, weight=1)
 
 
     #--- Frames ---#
     # Login Frame
+    
     login_frame = tk.Frame(
         container, 
         bg=background_colour_2, 
@@ -63,26 +66,38 @@ def CMP_Application():
         highlightthickness=2,
         highlightcolor='#dddddd'
         )
+    #login_frame.grid_propagate(False)
+    # Configure grid
+    login_frame.grid_columnconfigure(0, weight=1) 
     
+
     # Menu Frame
     menu_frame = tk.Frame(
         container, 
+        bg=background_colour_1,
+        )
+
+
+    #--- Sub-section Frames ---#
+    
+    # Content section
+    content_section = tk.Frame(
+        menu_frame,
         bg=background_colour_2,
-        width=500,
-        height=300,
+        width=700,
+        height=450,
         bd=2,
         relief='ridge'
-    )
+        )
+    content_section.grid_rowconfigure(1, weight=1)
+    content_section.grid_columnconfigure(0, weight=1)
 
+    
+
+    # Place and ordering 
     for frame in (menu_frame, login_frame):
-        frame.place(relx=0.5, rely=0.5, anchor='center')
-        
-    
-    
-
-
-
-
+        frame.grid(row=0, column=0)
+    login_frame.tkraise()
 
 
     #--- Functions ---#
@@ -113,18 +128,16 @@ def CMP_Application():
         # Prevents placeholder from being submitted
         if username != 'Username':
             print(f"Logging in as {username}")
-            menu_frame.tkraise()
+            menu_frame.tkraise() 
         else:
             print("Invalid username")
 
 
 
+    #--- Login page ---#  
+    
 
-
-    #--- Login page ---#
-    login_frame.grid_columnconfigure(1, weight=1)
-
-    # Creating widgets  
+    # Creating widgets 
     login_label = tk.Label(
         login_frame, text="Log in", 
         bg=background_colour_2, 
@@ -146,7 +159,7 @@ def CMP_Application():
         fg=font_colour_2, 
         font=(font_1, 12), 
         relief='flat', 
-        command='login')
+        command=lambda: login())
     
     exit_button = tk.Button(
         login_frame, 
@@ -159,20 +172,123 @@ def CMP_Application():
     
 
     #Placing widgets
-    login_label.grid(row=0, column=0, columnspan=2, pady=(20, 10), sticky='ew')
-    username_entry.grid(row=1, column=0, columnspan=2, padx=20, pady=10, ipady=5, sticky='ew')
-    login_button.grid(row=2, column=0, columnspan=2, padx=20, pady=10, ipadx=10, ipady=5, sticky='ew')
-    exit_button.grid(row=3, column=0, columnspan=2, pady=(10, 20), sticky='ew')
+    login_label.grid(row=0, column=0, pady=(20, 10), sticky='ew')
+    username_entry.grid(row=1, column=0, padx=20, pady=10, ipady=5, sticky='ew')
+    login_button.grid(row=2, column=0, padx=20, pady=10, ipadx=10, ipady=5, sticky='ew')
+    exit_button.grid(row=3, column=0, pady=(10, 20), sticky='ew')
     #---------#
+
+
 
     #--- Menu Frame ---#
-    
 
-    
+    # Creating widget
+    # Title
+    menu_title_label = tk.Label(
+        menu_frame,
+        text="Main Menu",
+        font=(font_1, 28),
+        bg=background_colour_1,
+        fg=font_colour_2
+    )
+
+
+    # Manage
+    manage_label = tk.Label(
+        content_section,
+        text='Manage',
+        font=(font_1, 14),
+        bg=background_colour_2,
+        fg=font_colour_1
+    )
+
+    manage_button_1 = tk.Button(
+        content_section,
+        text='Student',
+        relief='flat',
+        width=50,
+        font=(font_1, 12),
+        bg=button_colour, 
+        fg=font_colour_2, 
+    ) 
+
+    manage_button_2 = tk.Button(
+        content_section,
+        text='Exams',
+        relief='flat',
+        width=50,
+        font=(font_1, 12),
+        bg=button_colour, 
+        fg=font_colour_2, 
+    ) 
+
+    manage_button_3 = tk.Button(
+        content_section,
+        text='Entries',
+        relief='flat',
+        width=50,
+        font=(font_1, 12),
+        bg=button_colour, 
+        fg=font_colour_2, 
+    ) 
+
+    # Seperator
+    seperator = tk.Frame(
+        content_section,
+        bg='#CCCCCC',
+        height=2,
+        width=400
+        )
+
+
+    # View
+    view_label = tk.Label(
+        content_section,
+        text='View',
+        font=(font_1, 14),
+        bg=background_colour_2,
+        fg=font_colour_1
+    )
+
+    view_button_1 = tk.Button(
+        content_section,
+        text='Timetable',
+        relief='flat',
+        width=50,
+        font=(font_1, 12),
+        bg=button_colour, 
+        fg=font_colour_2, 
+    ) 
+
+    view_button_2 = tk.Button(
+        content_section,
+        text='Results',
+        relief='flat',
+        width=50,
+        font=(font_1, 12),
+        bg=button_colour, 
+        fg=font_colour_2, 
+    ) 
+
+    # Placing Widgets
+
+    menu_title_label.grid(row=0, column=0, columnspan=2, pady=(40,10), sticky='n')
+    content_section.grid(row=1, column=0)
+
+    manage_label.grid(row=0, column=0, pady=(20,10))
+    manage_button_1.grid(row=1, column=0, padx=20, pady=5)
+    manage_button_2.grid(row=2, column=0, padx=20, pady=5)
+    manage_button_3.grid(row=3, column=0, padx=20, pady=5)
+
+    seperator.grid(row=4, column=0, pady=(20, 5))
+
+    view_label.grid(row=5, column=0, pady=(5, 5))
+    view_button_1.grid(row=6, column=0, padx=20, pady=5)
+    view_button_2.grid(row=7, column=0, padx=20, pady=(5, 20))
+
     #---------#
 
-    # Start app on login
-    login_frame.tkraise
+
     window.mainloop()
 
 
