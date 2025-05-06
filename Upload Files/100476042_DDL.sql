@@ -136,7 +136,7 @@ RETURNS trigger AS $autofill_cancel_table$
 
         -- Inserts deleted data into cancel table to retain integrity
         INSERT INTO cancel(eno, excode, sno, cdate, cuser) VALUES
-            (OLD.eno, OLD.excode, OLD.sno, NOW(), 'System user');
+            (OLD.eno, OLD.excode, OLD.sno, NOW(), COALESCE(current_setting('session.current_user', true), 'System user'));
 
         RETURN NULL;
 

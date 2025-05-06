@@ -14,22 +14,28 @@
 """
 
 #Imports
-from _100476042_db import connect_to_database, execute_SQL_file
+from _100476042_db import connect_to_database,disconnect_from_database, execute_SQL_file
 from _100476042_GUI_source_code import CMP_Application
-import tkinter as tk
+
 
 #--------------- MAIN ---------------#
+
+def on_closing(app):
+    disconnect_from_database()
+    app.destroy()
 
 def main():
     # Connects and executes following SQL files
     conn = connect_to_database()
+
     execute_SQL_file(conn, "Upload Files/100476042_DDL.sql")
     execute_SQL_file(conn, "Upload Files/100476042_own_data.sql")
-    conn.close()
-    print("------ Disconnected from Database. ------")
 
     #Lanch the GUI
     app = CMP_Application()
+
+    # Upon Gui close it disconnects database
+    app.protocol("WM_DELETE_WINDOW", lambda: on_closing(app))
     app.mainloop()
 
 
