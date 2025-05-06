@@ -20,7 +20,7 @@ import tkinter.messagebox as messagebox
 from tkinter import ttk
 
 from _100476042_validation import *
-from _100476042_db import set_current_user, add_student_to_db, add_exam_to_db, add_entry_to_db, delete_student_from_db, delete_exam_from_db, delete_entry_from_db, update_entry_to_db, fetch_timetable_from_db
+from _100476042_db import set_current_user, add_student_to_db, add_exam_to_db, add_entry_to_db, delete_student_from_db, delete_exam_from_db, delete_entry_from_db, update_entry_to_db, fetch_timetable_from_db, fetch_results_from_db
 
 # ----------- GLOBAL STYLES -----------
 LARGEFONTBOLD = ("Poppins", 28, 'bold')
@@ -740,7 +740,6 @@ class TimetablePage(tk.Frame):
             bg=background_colour_1,
             fg=font_colour_2
         )
-        title_label.grid
 
         content_section = tk.Frame(
             self,
@@ -750,61 +749,56 @@ class TimetablePage(tk.Frame):
             bd=2,
             relief='ridge'
         )
-        content_section.grid(row=1, column=0, padx=25, pady=(5, 25), sticky='nesw')
-        content_section.grid_rowconfigure(0, weight=1)
+        content_section.grid(row=2, column=0, padx=25, pady=(5, 25), sticky='nesw')
+        content_section.grid_rowconfigure(2, weight=1)
         content_section.grid_columnconfigure(0, weight=1)
 
-        filter_timetable_entry = tk.Entry(content_section, font=SMALLFONT, width=30)
-        add_placeholder(filter_timetable_entry, "Filter by Student Number")
+        self.filter_timetable_entry = tk.Entry(content_section, font=SMALLFONT, width=30)
+        add_placeholder(self.filter_timetable_entry, "Filter by Student Number")
         filter_timetable_button = tk.Button(
             content_section,
-            text="Filter",
+            text="FILTER",
             bg=button_colour,
             fg=font_colour_2,
-            font=SMALLFONT,
+            font=(font_1, 10),
             relief='flat',
             command=self.filter_timetable
 
         )
-
         
         title_label.grid(row=0, column=0, columnspan=2, pady=(30, 10))
-        filter_timetable_entry.grid(row=1, column=1, padx=10, pady=20, sticky='new')
-        filter_timetable_button.grid(row=1, column=2, padx=10, pady=20, sticky='new')
+        self.filter_timetable_entry.grid(row=1, column=1, padx=10, pady=20, sticky='new')
+        filter_timetable_button.grid(row=1, column=2, padx=10, pady=20, sticky='w')
 
 
         # TreeView Setup
-        my_tree = ttk.Treeview(content_section)
+        self.my_tree = ttk.Treeview(content_section)
 
         # Defining columns
-        my_tree['columns'] = ("Name", "Code", "Title", "Location", "Date", "Time")
+        self.my_tree['columns'] = ("Name", "Code", "Title", "Location", "Date", "Time")
 
         # Formate Columns
-        my_tree.column("#0", width=0, stretch=tk.NO)
-        my_tree.column("Name", anchor='w', width=120)
-        my_tree.column("Code", anchor='w', width=100)
-        my_tree.column("Title", anchor='w', width=150)
-        my_tree.column("Location", anchor='w', width=120)
-        my_tree.column("Date", anchor='w', width=100)
-        my_tree.column("Time", anchor='w', width=100)
+        self.my_tree.column("#0", width=0, stretch=tk.NO)
+        self.my_tree.column("Name", anchor='w', width=120)
+        self.my_tree.column("Code", anchor='w', width=100)
+        self.my_tree.column("Title", anchor='w', width=150)
+        self.my_tree.column("Location", anchor='w', width=120)
+        self.my_tree.column("Date", anchor='w', width=100)
+        self.my_tree.column("Time", anchor='w', width=100)
 
         # Column Headings
-        my_tree.heading('#0', text='', anchor='w')
-        my_tree.heading('Name', text='Student Name', anchor='w')
-        my_tree.heading('Code', text='Course Code', anchor='w')
-        my_tree.heading('Title', text='Course Title', anchor='w')
-        my_tree.heading('Location', text='Location', anchor='w')
-        my_tree.heading('Date', text='Date', anchor='w')
-        my_tree.heading('Time', text='Time', anchor='w')
+        self.my_tree.heading('#0', text='', anchor='w')
+        self.my_tree.heading('Name', text='Student Name', anchor='w')
+        self.my_tree.heading('Code', text='Exam Code', anchor='w')
+        self.my_tree.heading('Title', text='Exam Title', anchor='w')
+        self.my_tree.heading('Location', text='Location', anchor='w')
+        self.my_tree.heading('Date', text='Date', anchor='w')
+        self.my_tree.heading('Time', text='Time', anchor='w')
 
-        my_tree.grid(row=2, column=0, columnspan=3, pady=10, padx=10, sticky='nsew')
+        self.my_tree.grid(row=2, column=0, columnspan=3, pady=10, padx=10, sticky='nsew')
 
         # Populate the Treeview initially
         self.populate_treeview()
-
-
-
-
 
 
     # --- Functionality for Entries ---
@@ -814,7 +808,7 @@ class TimetablePage(tk.Frame):
         sno = self.filter_timetable_entry.get()
 
         # Validation
-        errors = validate_student_data(sno)
+        errors = validate_filter_timetable(sno)
 
         if errors:
             messagebox.showerror("Input Errors", "\n".join(errors))
@@ -824,15 +818,15 @@ class TimetablePage(tk.Frame):
     
     def populate_treeview(self, sno=None):
         # Clear current data in Treeview
-        #for item in self.my_tree.get_children():
-        #    self.my_tree.delete(item)
+        for item in self.my_tree.get_children():
+            self.my_tree.delete(item)
 
         # Fetch data from the database
         data = fetch_timetable_from_db(sno)
         
         # Insert new data into the Treeview
         for row in data:
-            self.my_tree.insert('', 'end', values=row)
+            self.my_tree.insert('', tk.END, values=row)
 
 
 # ----------- RESULTS PAGE -----------#
@@ -870,10 +864,81 @@ class ResultsPage(tk.Frame):
         content_section.grid_rowconfigure(0, weight=1)
         content_section.grid_columnconfigure(0, weight=1)
 
+        self.filter_results_entry = tk.Entry(content_section, font=SMALLFONT, width=30)
+        add_placeholder(self.filter_results_entry, "Filter by Exam Code")
+        filter_results_button = tk.Button(
+            content_section,
+            text="FILTER",
+            bg=button_colour,
+            fg=font_colour_2,
+            font=(font_1, 10),
+            relief='flat',
+            command=self.filter_results
 
-
-
-
-
-
+        )
+        
         title_label.grid(row=0, column=0, columnspan=2, pady=(30, 10))
+        self.filter_results_entry.grid(row=1, column=1, padx=10, pady=20, sticky='new')
+        filter_results_button.grid(row=1, column=2, padx=10, pady=20, sticky='w')
+
+
+        
+        # TreeView Setup
+        self.my_tree = ttk.Treeview(content_section)
+
+        # Defining columns
+        self.my_tree['columns'] = ("Code", 'Name', 'Title', 'Results')
+
+        # Formate Columns
+        self.my_tree.column("#0", width=0, stretch=tk.NO)
+        self.my_tree.column("Code", anchor='w', width=120)
+        self.my_tree.column("Name", anchor='w', width=100)
+        self.my_tree.column("Title", anchor='w', width=150)
+        self.my_tree.column("Results", anchor='w', width=120)
+
+        # Column Headings
+        self.my_tree.heading('#0', text='', anchor='w')
+        self.my_tree.heading('Code', text='Exam Code', anchor='w')
+        self.my_tree.heading('Name', text='Student Name', anchor='w')
+        self.my_tree.heading('Title', text='Exam Title', anchor='w')
+        self.my_tree.heading('Results', text='Results', anchor='w')
+      
+
+        self.my_tree.grid(row=2, column=0, columnspan=3, pady=10, padx=10, sticky='nsew')
+
+        # Populate the Treeview initially
+        self.populate_treeview()
+
+    # --- Functionality for Entries ---
+
+    def filter_results(self):
+        # Retrieving inputs
+        excode = self.filter_results_entry.get()
+
+        # Validation
+        errors = validate_filter_results(excode)
+
+        if errors:
+            messagebox.showerror("Input Errors", "\n".join(errors))
+            return
+        
+        self.populate_treeview(excode)
+    
+    def populate_treeview(self, excode=None):
+        # Clear current data in Treeview
+        for item in self.my_tree.get_children():
+            self.my_tree.delete(item)
+
+        # Fetch data from the database
+        data = fetch_results_from_db(excode)
+        
+        # Insert new data into the Treeview
+        for row in data:
+            self.my_tree.insert('', tk.END, values=row)
+
+
+
+
+
+
+

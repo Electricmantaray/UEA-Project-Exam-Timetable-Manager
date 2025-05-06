@@ -99,7 +99,7 @@ def add_student_to_db(sno: int, sname: str, semail: str):
             (sno, sname, semail)
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Added student: {sno}, {sname}, {semail}')
         return True, None
@@ -122,7 +122,7 @@ def delete_student_from_db(sno: int):
             (sno, )
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Deleted student: {sno}')
         return True, None
@@ -146,7 +146,7 @@ def add_exam_to_db(excode: str, extitle: str, exlocation: str, exdate: str, exti
             (excode, extitle, exlocation, exdate, extime)
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Added exam: {excode}, {extitle}')
         return True, None
@@ -169,7 +169,7 @@ def delete_exam_from_db(excode: str):
             (excode, )
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Deleted exam: {excode}')
         return True, None
@@ -196,7 +196,7 @@ def add_entry_to_db(eno: int, excode: str, sno: int, egrade):
             (eno, excode, sno, egrade)
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Added entry: {eno}, {excode}')
         return True, None
@@ -220,7 +220,7 @@ def delete_entry_from_db(eno):
             (eno, )
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Deleted exam: {eno}')
         return True, None
@@ -246,7 +246,7 @@ def update_entry_to_db(eno: int, egrade):
             (egrade, eno)
         )
         conn.commit()
-        cur.close
+        cur.close()
 
         print(f'{current_user} | Updated entry: {eno}, {egrade}')
         return True, None
@@ -259,11 +259,12 @@ def update_entry_to_db(eno: int, egrade):
 #---------------------------------------------------#
 
 #--------------- VIEW FROM GUI ---------------#
+# --- Timetable ---
 def fetch_timetable_from_db(sno):
     # If connected then just returns global variable
     conn = connect_to_database()
 
-    try:
+    if sno:
         #Deletes entry
         cur = conn.cursor()
 
@@ -272,16 +273,48 @@ def fetch_timetable_from_db(sno):
             (sno, )
         )
         data = cur.fetchall()
-        conn.commit()
-        cur.close
 
-        print(f'{current_user} | Fetched Timetable: {sno}')
-        return data, None
-    
-    except psycopg2.Error as e:
-            # If an error occurs, roll back the transaction to prevent blocking future operations
-            conn.rollback()
-            print(f'{current_user} | Error Fetching Timetable:', e)
+    else:
+        #Deletes entry
+        cur = conn.cursor()
 
+        cur.execute(
+            "SELECT sname, excode, extitle, exlocation, exdate, extime FROM student_timetable;"
+        )
+        data = cur.fetchall()
+    conn.commit()
+    cur.close()
+
+    print(f'{current_user} | Fetched Timetable: {sno}')
+    return data
+
+# -- Results ---
+def fetch_results_from_db(excode):
+    # If connected then just returns global variable
+    conn = connect_to_database()
+
+    if excode:
+        #Deletes entry
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT * FROM exam_results WHERE excode = %s;",
+           (excode, )
+        )
+        data = cur.fetchall()
+
+    else:
+        #Deletes entry
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT * FROM exam_results;"
+        )
+        data = cur.fetchall()
+    conn.commit()
+    cur.close()
+
+    print(f'{current_user} | Fetched Timetable: {excode}')
+    return data
 
 #---------------------------------------------#
