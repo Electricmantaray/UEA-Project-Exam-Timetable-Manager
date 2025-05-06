@@ -935,10 +935,3 @@ class ResultsPage(tk.Frame):
         # Insert new data into the Treeview
         for row in data:
             self.my_tree.insert('', tk.END, values=row)
-
-
-
-
-
-
-
