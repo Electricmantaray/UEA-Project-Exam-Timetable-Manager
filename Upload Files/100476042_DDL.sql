@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS entry (
     excode CHAR(4) NOT NULL,
     sno INTEGER NOT NULL,
     egrade DECIMAL(5,2) CHECK (egrade BETWEEN 0 AND 100),
-    CONSTRAINT fk_entry_exam FOREIGN KEY (excode) REFERENCES exam(excode) ON DELETE CASCADE,
-    CONSTRAINT fk_entry_student FOREIGN KEY (sno) REFERENCES student(sno) ON DELETE CASCADE
+    CONSTRAINT fk_entry_exam FOREIGN KEY (excode) REFERENCES exam(excode) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_entry_student FOREIGN KEY (sno) REFERENCES student(sno) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Cancel table, stores cancelled enteries
