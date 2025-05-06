@@ -31,7 +31,7 @@ font_1 = "Poppins"
 # Colours
 background_colour_1 = '#224855'
 background_colour_2 = '#B8D8D8'
-button_colour = '#82B8B6'
+button_colour = '#68A9A7'
 font_colour_1 = '#000000'
 font_colour_2 = '#FFFFFF'
 font_colour_3 = '#808080'
@@ -749,7 +749,7 @@ class TimetablePage(tk.Frame):
             bd=2,
             relief='ridge'
         )
-        content_section.grid(row=2, column=0, padx=25, pady=(5, 25), sticky='nesw')
+        content_section.grid(row=1, column=0, padx=25, pady=(5, 25), sticky='nesw')
         content_section.grid_rowconfigure(2, weight=1)
         content_section.grid_columnconfigure(0, weight=1)
 
@@ -861,7 +861,7 @@ class ResultsPage(tk.Frame):
             relief='ridge'
         )
         content_section.grid(row=1, column=0, padx=25, pady=(5, 25), sticky='nesw')
-        content_section.grid_rowconfigure(0, weight=1)
+        content_section.grid_rowconfigure(2, weight=1)
         content_section.grid_columnconfigure(0, weight=1)
 
         self.filter_results_entry = tk.Entry(content_section, font=SMALLFONT, width=30)

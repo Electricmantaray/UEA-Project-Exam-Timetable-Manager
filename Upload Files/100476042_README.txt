@@ -8,3 +8,65 @@ Description:
 
 ---
 
+# --- GUI Features ---
+- Modular design: Classes
+- Use of Header
+
+# -- Login --
+- Username login
+- Resisable 1080 window
+
+# -- Main menu --
+- Clean layout with white central container
+- 5 Buttons,
+    - Manage Students
+    - Manage Exams
+    - Manage Entries
+    ---
+    - View Timetable
+    - View Results
+
+# -- Student, Exam & Entry Pages --
+- Add/Delete functionality
+- Left/right containers
+- All inputs validated with 'validation.py'
+
+# -- Timetable Pages --
+- Treeview showing timetables
+- Filter by Student number
+- Consistent layout using .grid()
+
+# -- Results page --
+- Treeview showing Student Results
+- Filter by Exam Code
+
+# --- Validation ---
+- Handles Erros
+- prevents bad insertions to Database
+
+--------
+
+# --- Database ---
+- Postgresql
+- Tables:
+    - Student
+    - Exam
+    - Entry
+    - Cancel
+- Enforced Constraints
+- good use of views, triggers and functions
+
+# --- Own Data ---
+- 10 sets of normal data for every Table
+- Testing:
+    - Every abnormal set inserted as Test
+    - Error messages commented above respective Test
+
+---------
+
+# --- Key sections ---
+Database auth -> _100476042_db.py
+Startup -> _100476042_main.py
+Temp Transaction -> 100476042_DDL.sql
+Test Inserts -> 100476042_own_data.sql
+Video -> 10476042_GUI_demo.mp4
