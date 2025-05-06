@@ -285,7 +285,6 @@ def fetch_timetable_from_db(sno):
     conn.commit()
     cur.close()
 
-    print(f'{current_user} | Fetched Timetable: {sno}')
     return data
 
 # -- Results ---
@@ -314,7 +313,6 @@ def fetch_results_from_db(excode):
     conn.commit()
     cur.close()
 
-    print(f'{current_user} | Fetched Timetable: {excode}')
     return data
 
 #---------------------------------------------#
