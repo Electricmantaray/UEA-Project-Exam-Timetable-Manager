@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS cancel (
 ------------------- INDEXES -------------------
 
 -- Indexes to optimise common queries
-CREATE INDEX index_exam_code ON exam(excode);
-CREATE INDEX index_student_number ON student(sno);
-CREATE INDEX index_entry_number ON entry(eno);
-CREATE INDEX index_exam_date ON exam(exdate);
+CREATE INDEX IF NOT EXISTS index_exam_code ON exam(excode);
+CREATE INDEX IF NOT EXISTS index_student_number ON student(sno);
+CREATE INDEX IF NOT EXISTS index_entry_number ON entry(eno);
+CREATE INDEX IF NOT EXISTS index_exam_date ON exam(exdate);
 -- Useful for filtering by
 
 -----------------------------------------------
@@ -136,7 +136,7 @@ RETURNS trigger AS $autofill_cancel_table$
 
         -- Inserts deleted data into cancel table to retain integrity
         INSERT INTO cancel(eno, excode, sno, cdate, cuser) VALUES
-            (OLD.eno, OLD.excode, OLD.sno, NOW(), COALESCE(current_setting('session.current_user', true), 'System user'));
+            (OLD.eno, OLD.excode, OLD.sno, NOW(), COALESCE(current_user, 'System user'));
 
         RETURN NULL;
 
@@ -192,7 +192,7 @@ INSERT INTO exam VALUES
 BEGIN TRANSACTION;
 
 DELETE FROM student
-WHERE sname = 'Emily Parker';
+WHERE sno = 1;
 
 COMMIT;
 

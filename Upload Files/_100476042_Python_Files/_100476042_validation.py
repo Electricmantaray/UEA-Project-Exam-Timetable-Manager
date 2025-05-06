@@ -28,7 +28,11 @@ def validate_student_data(sno, sname, semail):
     errors = []
 
     # sno: integer, PK
-    if not isinstance(sno, int):
+    try:
+        sno = int(sno)
+        if not isinstance(sno, int):
+            errors.append("Student number must be an integer")
+    except ValueError:
         errors.append("Student number must be an integer")
 
     # sname: <200 characters, Not Null
@@ -36,7 +40,7 @@ def validate_student_data(sno, sname, semail):
         errors.append("Student name cannot be empty or above 200 characters.")
 
     # semail: <200 characters, valid format, Not Null
-    if (not semail) or (len(semail.strip()) == 0) or ('@' in semail == False) or (len(sname) > 200):
+    if (not semail) or (len(semail.strip()) == 0) or ('@' not in semail) or (len(sname) > 200):
         errors.append('Invalid email')
 
     return errors
@@ -82,16 +86,37 @@ def validate_entry_data(eno, excode, sno, egrade):
     errors = []
 
     # eno: integer, PK
-    if not isinstance(eno, int):
+    try:
+        eno = int(eno)
+        if not isinstance(eno, int):
+            errors.append("Entry number must be an integer.")
+    except ValueError:
         errors.append("Entry number must be an integer.")
+    
 
     # excode: 4 characters, Not Null
     if (not isinstance(excode, str)) or (len(excode) != 4):
         errors.append("Exam code must be exactly 4 characters.")
 
     # sno: integer, Not Null
-    if not isinstance(sno, int):
+    try:
+        sno = int(sno)
+        if not isinstance(sno, int):
+            errors.append("Student number must be an integer")
+    except ValueError:
         errors.append("Student number must be an integer")
+
+def validate_update_entry_data(eno, egrade):
+    errors = []
+
+        # eno: integer, PK
+    try:
+        eno = int(eno)
+        if not isinstance(eno, int):
+            errors.append("Entry number must be an integer.")
+    except ValueError:
+        errors.append("Entry number must be an integer.")
+    
 
     # egrade: decimal, between 0-100
     try:
@@ -109,7 +134,11 @@ def validate_delete_student(sno):
     errors = []
 
     # sno: integer
-    if not isinstance(sno, int):
+    try:
+        sno = int(sno)
+        if not isinstance(sno, int):
+            errors.append("Student number must be an integer")
+    except ValueError:
         errors.append("Student number must be an integer")
     
     return errors
@@ -127,7 +156,11 @@ def validate_delete_entry(eno):
     errors = []
 
     # eno: integer
-    if not isinstance(eno, int):
+    try:
+        eno = int(eno)
+        if not isinstance(eno, int):
+            errors.append("Entry number must be an integer.")
+    except ValueError:
         errors.append("Entry number must be an integer.")
 
     return errors

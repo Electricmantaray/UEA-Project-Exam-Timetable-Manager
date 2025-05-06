@@ -17,7 +17,6 @@ INSERT into exam(excode, extitle, exlocation, exdate, extime) VALUES
     ('AI02', 'Ai, Large language models and beyond', 'University of Birmingham, room 305', '2025-11-07', '12:00'),
     ('MA01', 'Maths Group A, Calculus 1', 'University of sheffield, The Diamond, room 13', '2025-11-09', '9:05');
 
-
 -- STUDENT --
 INSERT into student(sno, sname, semail) VALUES
     (1, 'Emily Parker', 'eparker23@example.edu'),

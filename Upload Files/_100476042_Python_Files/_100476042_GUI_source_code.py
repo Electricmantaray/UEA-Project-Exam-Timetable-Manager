@@ -17,19 +17,21 @@
 """
 import tkinter as tk
 import tkinter.messagebox as messagebox
+from tkinter import ttk
 
 from _100476042_validation import *
-from _100476042_db import set_current_user, add_student_to_db, add_exam_to_db, add_entry_to_db, delete_student_from_db, delete_exam_from_db, delete_entry_from_db
+from _100476042_db import set_current_user, add_student_to_db, add_exam_to_db, add_entry_to_db, delete_student_from_db, delete_exam_from_db, delete_entry_from_db, update_entry_to_db
 
 # ----------- GLOBAL STYLES -----------
-LARGEFONT = ("Poppins", 28)
+LARGEFONTBOLD = ("Poppins", 28, 'bold')
+SMALLFONTBOLD = ("Poppins", 12, 'bold')
 SMALLFONT = ("Poppins", 12)
 font_1 = "Poppins"
 
 # Colours
 background_colour_1 = '#224855'
-background_colour_2 = '#FFFFFF'
-button_colour = '#90AEAD'
+background_colour_2 = '#B8D8D8'
+button_colour = '#82B8B6'
 font_colour_1 = '#000000'
 font_colour_2 = '#FFFFFF'
 font_colour_3 = '#808080'
@@ -68,7 +70,17 @@ class HeaderBar(tk.Frame):
             fg=font_colour_2
         )
 
-        # Exit button
+        # Home Button
+        home_button = tk.Button(
+            self,
+            text='◀',
+            font=(font_1, 10),
+            bg=background_colour_2,
+            relief='flat',
+            command=self.go_home
+        )
+
+        # Exit Button
         exit_button = tk.Button(
             self,
             text='❌',
@@ -79,7 +91,11 @@ class HeaderBar(tk.Frame):
         )
 
         exit_button.pack(side='right', padx=(10, 10), pady=10)
+        home_button.pack(side='right', padx=(10, 10), pady=10)
         self.username_label.pack(side='right', padx=(0, 10), pady=10)
+
+    def go_home(self):
+        self.controller.show_frame(MenuPage)
 
     def update_username(self):
         user = self.controller.logged_in_user
@@ -143,7 +159,16 @@ class LoginPage(tk.Frame):
             username = username_entry.get()
             if username and username != 'Username':
                 print(f"Logging in as {username}")
-                controller.logged_in_user= username
+
+                # Validation
+                errors = validate_username(username)
+
+                if errors:
+                    messagebox.showerror("Input Errors", "\n".join(errors))
+                    return
+        
+                set_current_user(username)
+                controller.logged_in_user=username
                 controller.show_frame(MenuPage)
             else:
                 print("Invalid username")
@@ -153,7 +178,7 @@ class LoginPage(tk.Frame):
             login_frame, text="Log in",
             bg=background_colour_2,
             fg=font_colour_1,
-            font=LARGEFONT
+            font=LARGEFONTBOLD
         )
         username_entry = tk.Entry(
             login_frame,
@@ -186,7 +211,7 @@ class LoginPage(tk.Frame):
         username_entry.grid(row=1, column=0, padx=20, pady=10, ipady=5, sticky='ew')
         login_button.grid(row=2, column=0, padx=20, pady=10, ipadx=10, ipady=5, sticky='ew')
         exit_button.grid(row=3, column=0, pady=(10, 20), sticky='ew')
-
+    
 
 # ----------- MENU PAGE -----------
 class MenuPage(tk.Frame):
@@ -204,7 +229,7 @@ class MenuPage(tk.Frame):
         menu_title_label = tk.Label(
             self,
             text="Main Menu",
-            font=LARGEFONT,
+            font=LARGEFONTBOLD,
             bg=background_colour_1,
             fg=font_colour_2
         )
@@ -223,8 +248,8 @@ class MenuPage(tk.Frame):
         content_section.grid_columnconfigure(0, weight=1)
 
         # Labels
-        manage_label = tk.Label(content_section, text='Manage', font=(font_1, 14), bg=background_colour_2, fg=font_colour_1)
-        view_label = tk.Label(content_section, text='View', font=(font_1, 14), bg=background_colour_2, fg=font_colour_1)
+        manage_label = tk.Label(content_section, text='Manage', font=(font_1, 14, 'bold'), bg=background_colour_2, fg=font_colour_1)
+        view_label = tk.Label(content_section, text='View', font=(font_1, 14, 'bold'), bg=background_colour_2, fg=font_colour_1)
 
         # Manage buttons
         manage_buttons = [
@@ -234,7 +259,7 @@ class MenuPage(tk.Frame):
         ]
 
         # Separator
-        separator = tk.Frame(content_section, bg='#CCCCCC', height=2, width=400)
+        separator = tk.Frame(content_section, bg='#4F6367', height=2, width=400)
 
         # View buttons
         view_buttons = [
@@ -256,7 +281,7 @@ class MenuPage(tk.Frame):
 
 # ----------- BASE FORM PAGE TEMPLATE -----------
 class BaseFormPage(tk.Frame):
-    def __init__(self, parent, controller, title):
+    def __init__(self, parent, controller, title, addTitle, deleteTitle):
         super().__init__(parent, bg=background_colour_1)
         self.controller = controller
 
@@ -266,13 +291,13 @@ class BaseFormPage(tk.Frame):
 
         # Header bar
         self.header = HeaderBar(self, controller)
-        self.header.grid(row=0, column=0, sticky='ne')
+        self.header.grid(row=0, column=1, sticky='ne')
 
         # Title
         title_label = tk.Label(
             self,
             text=title,
-            font=LARGEFONT,
+            font=LARGEFONTBOLD,
             bg=background_colour_1,
             fg=font_colour_2
         )
@@ -304,8 +329,8 @@ class BaseFormPage(tk.Frame):
         # Add section title
         self.add_label = tk.Label(
             self.left_container,
-            text="Add",
-            font=(font_1, 16),
+            text=addTitle,
+            font=(font_1, 16, 'bold'),
             bg=background_colour_2,
             fg=font_colour_1
         )
@@ -313,8 +338,8 @@ class BaseFormPage(tk.Frame):
         # Delete section title
         self.delete_label = tk.Label(
             self.right_container,
-            text="Delete",
-            font=(font_1, 16),
+            text=deleteTitle,
+            font=(font_1, 16, 'bold'),
             bg=background_colour_2,
             fg=font_colour_1
         )
@@ -323,15 +348,15 @@ class BaseFormPage(tk.Frame):
         title_label.grid(row=0, column=0, columnspan=2, pady=(30, 10))
         self.left_container.grid(row=1, column=0, padx=40, pady=10, sticky='nsew')
         self.right_container.grid(row=1, column=1, padx=40, pady=10, sticky='nsew')
-        self.add_label.grid(row=0, column=0, pady=(10, 5), sticky='w')
-        self.delete_label.grid(row=0, column=0, pady=(10, 5), sticky='w')
+        self.add_label.grid(row=0, column=0, pady=(10, 5), sticky='n')
+        self.delete_label.grid(row=0, column=0, pady=(10, 5), sticky='n')
 
 
 #------------ MANAGE PAGES -----------#
 # ----------- STUDENT PAGE -----------#
 class StudentPage(BaseFormPage):
     def __init__(self, parent, controller):
-        super().__init__(parent, controller, title='StudentPage')
+        super().__init__(parent, controller, title='Student Page', addTitle='Add Student', deleteTitle='Delete Student')
 
         # --- Add Section ---
         # Add form widgets to left container
@@ -354,7 +379,7 @@ class StudentPage(BaseFormPage):
         add_placeholder(self.student_email_entry, 'Student Email')
 
         # Widget Placement for left container
-        self.student_number_entry.grid(row=1, column=0, padx=20, pady=5, sticky='ew')
+        self.student_number_entry.grid(row=1, column=0, padx=20, pady=5, sticky='new')
         self.student_name_entry.grid(row=2, column=0, padx=20, pady=5, sticky='ew')
         self.student_email_entry.grid(row=3, column=0, padx=20, pady=5, sticky='ew')
         self.add_button.grid(row=4, column=0, padx=20, pady=5, sticky='ew')
@@ -394,7 +419,7 @@ class StudentPage(BaseFormPage):
             return
         
         # Check if runs on database
-        success, database_error = add_student_to_db(sno, sname, semail)
+        success, database_error = add_student_to_db(int(sno), sname, semail)
 
         if success:
             messagebox.showinfo("Success", "Student added successfully!")
@@ -417,7 +442,7 @@ class StudentPage(BaseFormPage):
             return
         
         # Check if runs on database
-        success, database_error = delete_student_from_db(sno)
+        success, database_error = delete_student_from_db(int(sno))
 
         if success:
             messagebox.showinfo("Success", "Student deleted successfully!")
@@ -430,7 +455,7 @@ class StudentPage(BaseFormPage):
 # ----------- EXAM PAGE -----------#
 class ExamPage(BaseFormPage):
     def __init__(self, parent, controller):
-        super().__init__(parent, controller, title='ExamPage')
+        super().__init__(parent, controller, title='Exam Page', addTitle='Add Exam', deleteTitle='Delete Exam')
 
         # --- Add Section ---
         # Add form widgets to left container
@@ -483,7 +508,6 @@ class ExamPage(BaseFormPage):
         # Widget Placement for right container
         self.delete_exam_entry.grid(row=1, column=0, padx=20, pady=5, sticky='ew')
         self.delete_button.grid(row=2, column=0, padx=20, pady=(10, 20), sticky='ew')
-
 
     # --- Functionality for Entries/Deletions ---
     def add_exam(self):
@@ -540,7 +564,7 @@ class ExamPage(BaseFormPage):
 # ----------- ENTRY PAGE -----------#
 class EntryPage(BaseFormPage):
     def __init__(self, parent, controller):
-        super().__init__(parent, controller, title='EntryPage')
+        super().__init__(parent, controller, title='Entry Page', addTitle='Add Entry', deleteTitle='Delete Entry')
 
         # --- Add Section ---
         # Add form widgets to left container
@@ -585,11 +609,44 @@ class EntryPage(BaseFormPage):
             command=self.delete_entry
         )
 
-        add_placeholder(self.delete_exam_entry, "Entry Number")
+        add_placeholder(self.delete_entry_entry, "Entry Number")
         
-        # Widget Placement for right container
+        # Widget Placement for right upper container
         self.delete_entry_entry.grid(row=1, column=0, padx=20, pady=5, sticky='ew')
         self.delete_button.grid(row=2, column=0, padx=20, pady=(10, 20), sticky='ew')
+
+        # --- Update Section ---
+        # Update egrade
+        # Add form widgets to right container
+        self.update_label = tk.Label(
+            self.right_container,
+            text='Update Entry',
+            font=(font_1, 16, 'bold'),
+            bg=background_colour_2,
+            fg=font_colour_1
+        )
+        self.update_entry_number_entry = tk.Entry(self.right_container, font=SMALLFONT)
+        self.update_exam_grade_entry = tk.Entry(self.right_container, font=SMALLFONT)
+
+        self.update_button = tk.Button(
+            self.right_container,
+            text='Update Entry',
+            bg=button_colour,
+            fg=font_colour_2,
+            font=SMALLFONT,
+            relief='flat',
+            command=self.update_entry
+        )
+
+        add_placeholder(self.update_entry_number_entry, "Entry Number")
+        add_placeholder(self.update_exam_grade_entry, "Exam Grade")
+
+        # Widget Placement for right lower container
+        self.update_label.grid(row=4, column=0, pady=(10, 5), sticky='n')
+        self.update_entry_number_entry.grid(row=5, column=0, padx=20, pady=(50,5), sticky='ew')
+        self.update_exam_grade_entry.grid(row=6, column=0, padx=20, pady=5, sticky='ew')
+        self.update_button.grid(row=7, column=0, padx=20, pady=5, sticky='ew')
+
 
     # --- Functionality for Entries/Deletions ---
     def add_entry(self):
@@ -607,7 +664,7 @@ class EntryPage(BaseFormPage):
             return
         
         # Check if runs on database
-        success, database_error = add_entry_to_db(eno, excode, sno, egrade)
+        success, database_error = add_entry_to_db(int(eno), excode, int(sno), egrade)
         if success:
             messagebox.showinfo("Success", "Entry added successfully!")
             # Clears entry fields
@@ -630,7 +687,7 @@ class EntryPage(BaseFormPage):
             return
         
         # Check if runs on database
-        success, database_error = delete_entry_from_db(eno)
+        success, database_error = delete_entry_from_db(int(eno))
 
         if success:
             messagebox.showinfo("Success", "Entry deleted successfully!")
@@ -639,7 +696,33 @@ class EntryPage(BaseFormPage):
         else:
             messagebox.showerror("Database Error", database_error)
 
-# ----------- RUN APP -----------
-if __name__ == "__main__":
-    app = CMP_Application()
-    app.mainloop()
+    def update_entry(self):
+        eno = self.update_entry_number_entry.get()
+        egrade = self.update_exam_grade_entry.get()
+
+        # Validation
+        errors = validate_update_entry_data(int(eno), float(egrade))
+
+        if errors:
+            messagebox.showerror("Input Errors", "\n".join(errors))
+            return
+        
+        # Check if runs on database
+        success, database_error = update_entry_to_db(int(eno), float(egrade))
+
+        if success:
+            messagebox.showinfo("Success", "Entry updated successfully!")
+            # Clears entry fields
+            self.update_entry_number_entry.delete
+            self.update_exam_grade_entry.delete
+        else:
+            messagebox.showerror("Database Error", database_error)
+        
+#------------ VIEW PAGES -----------#
+# ----------- TIMETABLE PAGE -----------#
+
+
+
+
+
+# ----------- RESULTS PAGE -----------#
