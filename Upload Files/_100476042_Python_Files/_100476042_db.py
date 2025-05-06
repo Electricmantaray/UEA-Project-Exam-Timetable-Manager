@@ -259,8 +259,29 @@ def update_entry_to_db(eno: int, egrade):
 #---------------------------------------------------#
 
 #--------------- VIEW FROM GUI ---------------#
+def fetch_timetable_from_db(sno):
+    # If connected then just returns global variable
+    conn = connect_to_database()
 
+    try:
+        #Deletes entry
+        cur = conn.cursor()
 
+        cur.execute(
+            "SELECT sname, excode, extitle, exlocation, exdate, extime FROM student_timetable WHERE sno = %s;",
+            (sno, )
+        )
+        data = cur.fetchall()
+        conn.commit()
+        cur.close
+
+        print(f'{current_user} | Fetched Timetable: {sno}')
+        return data, None
+    
+    except psycopg2.Error as e:
+            # If an error occurs, roll back the transaction to prevent blocking future operations
+            conn.rollback()
+            print(f'{current_user} | Error Fetching Timetable:', e)
 
 
 #---------------------------------------------#

@@ -13,13 +13,38 @@
 """
 from datetime import datetime
 
-#--------------- USERNAME VALIDATION ---------------#
+#--------------- GENERAL VALIDATION ---------------#
+# Username
 def validate_username(username):
     errors = []
 
     if (not username) or (len(username.strip()) == 0) or len(username) > 200:
         errors.append('Username cannot be empty or above 200 characters.')
 
+    return errors
+
+# Timetable
+def validate_filter_timetable(sno):
+    errors = []
+
+    # sno: integer
+    try:
+        sno = int(sno)
+        if not isinstance(sno, int):
+            errors.append("Student number must be an integer")
+    except ValueError:
+        errors.append("Student number must be an integer")
+    
+    return errors
+
+# Results
+def validate_filter_results(excode):
+    errors = []
+
+    # excode: 4 characters
+    if (not isinstance(excode, str)) or (len(excode) != 4):
+        errors.append("Exam code must be exactly 4 characters.")
+    
     return errors
 
 #--------------- STUDENT VALIDATION ---------------#
