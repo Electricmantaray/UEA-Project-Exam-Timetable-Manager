@@ -1,4 +1,4 @@
-SET search_path TO Coursework, public;
+SET search_path TO "100476042_Coursework", public;
 
 -- DATA INSERTIONS --
 
