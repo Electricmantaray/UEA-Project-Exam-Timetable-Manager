@@ -1,7 +1,5 @@
 CMPS Coursework Project - Database Systems
 <br></br>
-Student ID: 100476042
-<br></br>
 Course/Module: 2024/5: DATABASE SYSTEMS - SEM2 - B
 <br></br>
 Description: 
